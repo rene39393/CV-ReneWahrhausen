@@ -1,24 +1,129 @@
 body {
     margin: 0;
+    font-family: "Outfit", system-ui, sans-serif;
+    background: #070b14; /* Randfarbe des Hintergrundbilds */
+    color: #fff;
+}
+
+/* Startseite füllt das Fenster, Bühne mittig */
+.start {
     min-height: 100vh;
     display: grid;
     place-items: center;
-    font-family: system-ui, sans-serif;
-    background: #f4f4f5;
-    color: #222;
 }
 
-main {
+/* Bühne im Bildformat 16:9, damit die Buttons immer vor der Hand stehen */
+.buehne {
+    position: relative;
+    width: min(100vw, 177.78vh);
+    aspect-ratio: 16 / 9;
+    background: url("hintergrund.jpg") center / cover no-repeat;
+    container-type: size;
+}
+
+/* Unterer Bildrand läuft weich in die Seitenfarbe aus */
+.buehne::after {
+    content: "";
+    position: absolute;
+    inset: auto 0 0 0;
+    height: 18%;
+    background: linear-gradient(transparent, #070b14);
+    pointer-events: none;
+}
+
+/* Name und Zitat links neben der zeigenden Hand (Größen relativ zur Bühne) */
+.intro {
+    position: absolute;
+    top: 46%;
+    left: 30%;
+    transform: translate(-50%, -50%);
+    width: 46%;
     text-align: center;
-    padding: 16px;
+    text-shadow: 0 2px 16px rgba(8, 12, 28, 0.9);
 }
 
-button {
-    padding: 10px 20px;
-    font-size: 1rem;
-    border: none;
-    border-radius: 6px;
-    background: #2563eb;
-    color: white;
-    cursor: pointer;
+h1 {
+    margin: 0;
+    font-size: 5.2cqw;
+    font-weight: 600;
+}
+
+/* Überschriften mit Farbverlauf */
+h1, h2 {
+    letter-spacing: 0.02em;
+    background: linear-gradient(90deg, #fff, #a5b4fc 60%, #6ee7f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+}
+
+blockquote {
+    margin: 2.2cqw 0 0;
+    font-size: 2cqw;
+    font-weight: 300;
+    line-height: 1.6;
+    color: #d6dbf5;
+}
+
+/* Buttons oben zentriert nebeneinander */
+.menue {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    gap: clamp(8px, 1.4vw, 20px);
+    white-space: nowrap;
+}
+
+.menue a {
+    padding: clamp(8px, 1vw, 16px) clamp(16px, 2vw, 32px);
+    font-size: clamp(0.85rem, 1.3vw, 1.3rem);
+    color: #fff;
+    text-decoration: none;
+    border: 1px solid rgba(120, 140, 255, 0.5);
+    border-radius: 999px;
+    background: rgba(40, 50, 120, 0.35);
+    backdrop-filter: blur(6px);
+    box-shadow: 0 0 12px rgba(110, 90, 255, 0.35);
+    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
+}
+
+.menue a:hover {
+    transform: translateY(-3px);
+    background: rgba(90, 80, 220, 0.6);
+    box-shadow: 0 0 24px rgba(110, 230, 250, 0.6);
+}
+
+/* Unterseiten: dunkel und schlicht */
+.inhalt {
+    min-height: 100vh;
+    box-sizing: border-box;
+    padding: 80px 8%;
+}
+
+h2 {
+    display: inline-block;
+    margin: 0;
+    font-size: clamp(2rem, 4vw, 3.5rem);
+    font-weight: 600;
+}
+
+/* Handy: Buttons über dem Bild, bei Bedarf umbrechen */
+@media (max-width: 700px) {
+    .buehne { margin-top: 110px; margin-bottom: 280px; }
+    .intro {
+        top: 100%;
+        transform: translate(-50%, 20px);
+        width: 90vw;
+    }
+    h1 { font-size: 2rem; }
+    blockquote { margin-top: 12px; font-size: 1rem; }
+    .menue {
+        top: -100px;
+        width: 92vw;
+        flex-wrap: wrap;
+        justify-content: center;
+        white-space: normal;
+    }
 }
