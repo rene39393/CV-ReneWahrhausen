@@ -107,25 +107,78 @@ if (ruhig) addEventListener("scroll", () => zeichnen(0));
 requestAnimationFrame(zeichnen);
 
 // Timeline: Stationen gleiten beim Erreichen herein, die Linie füllt sich mit
-const timeline = document.querySelector(".timeline");
-if (timeline) {
-    timeline.classList.add("animiert");
-    const beobachter = new IntersectionObserver(eintraege => {
-        for (const e of eintraege) {
-            if (e.isIntersecting) {
-                e.target.classList.add("sichtbar");
-                beobachter.unobserve(e.target);
-            }
+const timelines = document.querySelectorAll(".timeline");
+const beobachter = new IntersectionObserver(eintraege => {
+    for (const e of eintraege) {
+        if (e.isIntersecting) {
+            e.target.classList.add("sichtbar");
+            beobachter.unobserve(e.target);
         }
-    }, { threshold: 0.2 });
-    timeline.querySelectorAll(".station").forEach(s => beobachter.observe(s));
+    }
+}, { threshold: 0.2 });
 
-    const linieAktualisieren = () => {
+timelines.forEach(timeline => {
+    timeline.classList.add("animiert");
+    timeline.querySelectorAll(".station").forEach(s => beobachter.observe(s));
+});
+
+function linienAktualisieren() {
+    timelines.forEach(timeline => {
         const box = timeline.getBoundingClientRect();
         const anteil = (innerHeight * 0.7 - box.top) / box.height;
         timeline.style.setProperty("--fortschritt", Math.min(Math.max(anteil, 0), 1) * 100 + "%");
-    };
-    addEventListener("scroll", linieAktualisieren, { passive: true });
-    addEventListener("resize", linieAktualisieren);
-    linieAktualisieren();
+    });
 }
+addEventListener("scroll", linienAktualisieren, { passive: true });
+addEventListener("resize", linienAktualisieren);
+linienAktualisieren();
+
+// Kompetenzen: Kacheln erscheinen nacheinander, Linien verbinden Nachbarn je Gruppe
+const kompetenzen = document.querySelector(".kompetenzen");
+if (kompetenzen) {
+    kompetenzen.classList.add("animiert");
+    const gruppenBeobachter = new IntersectionObserver(eintraege => {
+        for (const e of eintraege) {
+            if (!e.isIntersecting) continue;
+            e.target.classList.add("sichtbar");
+            e.target.querySelectorAll(".kachel").forEach((k, i) =>
+                setTimeout(() => k.classList.add("sichtbar"), i * 120));
+            gruppenBeobachter.unobserve(e.target);
+        }
+    }, { threshold: 0.2 });
+    kompetenzen.querySelectorAll(".netzgruppe").forEach(g => gruppenBeobachter.observe(g));
+}
+
+function verbindungenZeichnen() {
+    document.querySelectorAll(".netzgruppe").forEach(gruppe => {
+        const svg = gruppe.querySelector(".verbindungen");
+        const basis = gruppe.getBoundingClientRect();
+        const mitten = [...gruppe.querySelectorAll(".kachel")].map(k => {
+            const r = k.getBoundingClientRect();
+            return { x: r.left - basis.left + r.width / 2, y: r.top - basis.top + r.height / 2, breite: r.width };
+        });
+
+        // in Zeilen einteilen (gleiche Höhe = gleiche Zeile)
+        const zeilen = [];
+        for (const m of mitten) {
+            const zeile = zeilen.find(z => Math.abs(z[0].y - m.y) < 10);
+            zeile ? zeile.push(m) : zeilen.push([m]);
+        }
+
+        const linien = [];
+        zeilen.forEach((zeile, zi) => {
+            zeile.forEach((m, i) => {
+                if (zeile[i + 1]) linien.push([m, zeile[i + 1]]);          // rechter Nachbar
+                const unten = zeilen[zi + 1]?.find(n => Math.abs(n.x - m.x) < m.breite / 2);
+                if (unten) linien.push([m, unten]);                           // Nachbar darunter
+            });
+        });
+
+        svg.innerHTML = linien
+            .map(([a, b]) => `<line x1="${a.x}" y1="${a.y}" x2="${b.x}" y2="${b.y}"/>`)
+            .join("");
+    });
+}
+addEventListener("resize", verbindungenZeichnen);
+document.fonts.ready.then(verbindungenZeichnen);
+verbindungenZeichnen();

@@ -282,6 +282,126 @@ h3 {
     background: rgba(40, 50, 120, 0.3);
 }
 
+/* Kompetenzen: Kacheln je Gruppe, durch fließende Linien verbunden */
+.gruppe {
+    max-width: 1100px;
+}
+
+.gruppen-titel {
+    margin: 56px 0 24px;
+    font-size: 1.3rem;
+    font-weight: 400;
+    letter-spacing: 0.06em;
+    color: #a5b4fc;
+}
+
+.netzgruppe {
+    position: relative;
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(230px, 1fr));
+    gap: 36px;
+}
+
+.verbindungen {
+    transition: opacity 1s 0.4s;
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    overflow: visible;
+    pointer-events: none;
+}
+
+.verbindungen line {
+    stroke: rgba(110, 230, 250, 0.6);
+    stroke-width: 1.5;
+    stroke-dasharray: 4 8;
+    animation: fliessen 1.2s linear infinite;
+}
+
+@keyframes fliessen {
+    to { stroke-dashoffset: -12; }
+}
+
+.kachel {
+    position: relative;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    min-height: 56px;
+    padding: 20px 22px 20px 46px;
+    font-weight: 600;
+    line-height: 1.35;
+    hyphens: auto; /* lange deutsche Wörter sauber trennen */
+    -webkit-hyphens: auto;
+    border: 1px solid rgba(120, 140, 255, 0.3);
+    border-radius: 16px;
+    background: rgba(16, 22, 50, 0.85);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.6s, transform 0.6s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.kachel:hover {
+    transform: translateY(-4px);
+    border-color: rgba(110, 230, 250, 0.6);
+    box-shadow: 0 0 28px rgba(110, 90, 255, 0.35);
+}
+
+/* Leuchtender Knoten in jeder Kachel */
+.kachel::before {
+    content: "";
+    position: absolute;
+    left: 20px;
+    top: 50%;
+    width: 10px;
+    height: 10px;
+    margin-top: -5px;
+    border-radius: 50%;
+    background: #6ee7f9;
+    box-shadow: 0 0 12px #6ee7f9;
+    animation: pulsieren 2.4s ease-in-out infinite;
+}
+
+.kachel small {
+    margin-top: 4px;
+    font-size: 0.9rem;
+    font-weight: 300;
+    color: #a5b4fc;
+}
+
+/* Sprachniveau als Balken, füllt sich beim Erscheinen */
+.niveau {
+    display: block;
+    height: 4px;
+    margin-top: 12px;
+    border-radius: 2px;
+    background: rgba(120, 140, 255, 0.15);
+    overflow: hidden;
+}
+
+.niveau::after {
+    content: "";
+    display: block;
+    height: 100%;
+    width: var(--wert);
+    background: linear-gradient(90deg, #6ee7f9, #8b7cff);
+    transition: width 1.4s 0.4s ease-out;
+}
+
+/* Vor dem Erscheinen (Klasse setzt script.js) */
+.kompetenzen.animiert .netzgruppe:not(.sichtbar) .verbindungen {
+    opacity: 0;
+}
+
+.kompetenzen.animiert .kachel:not(.sichtbar) {
+    opacity: 0;
+    transform: scale(0.9);
+}
+
+.kompetenzen.animiert .kachel:not(.sichtbar) .niveau::after {
+    width: 0;
+}
+
 /* Hochformat (Handy, Tablet): Buttons oben, darunter Foto, dann Name und Zitat */
 @media (orientation: portrait) {
     .start { display: block; }
@@ -319,8 +439,11 @@ h3 {
     .timeline { padding-left: 36px; margin-top: 40px; }
     .station { padding: 22px 20px; }
     .station::before { left: -32px; }
+    .netzgruppe { grid-template-columns: repeat(auto-fill, minmax(150px, 1fr)); gap: 24px; }
+    .kachel { padding: 16px 14px 16px 38px; font-size: 0.95rem; }
+    .kachel::before { left: 16px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
-    .ring::before, .station::before { animation: none; }
+    .ring::before, .station::before, .kachel::before, .verbindungen line { animation: none; }
 }
