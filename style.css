@@ -1,7 +1,7 @@
 body {
     margin: 0;
     font-family: "Outfit", system-ui, sans-serif;
-    background: #070b14; /* Randfarbe des Hintergrundbilds */
+    background: #070D18; /* Randfarbe des Hintergrundbilds */
     color: #fff;
 }
 
@@ -27,7 +27,7 @@ body {
     position: absolute;
     inset: auto 0 0 0;
     height: 18%;
-    background: linear-gradient(transparent, #070b14);
+    background: linear-gradient(transparent, #070D18);
     pointer-events: none;
 }
 
@@ -65,20 +65,23 @@ blockquote {
     color: #d6dbf5;
 }
 
-/* Buttons oben zentriert nebeneinander */
+/* Buttons oben zentriert nebeneinander, schrumpfen mit der Bühne */
 .menue {
     position: absolute;
     top: 4%;
     left: 50%;
     transform: translateX(-50%);
+    width: 94%;
     display: flex;
-    gap: clamp(8px, 1.4vw, 20px);
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: clamp(6px, 1.4cqw, 20px);
     white-space: nowrap;
+    font-size: clamp(11px, 1.3cqw, 1.3rem);
 }
 
 .menue a {
-    padding: clamp(8px, 1vw, 16px) clamp(16px, 2vw, 32px);
-    font-size: clamp(0.85rem, 1.3vw, 1.3rem);
+    padding: 0.6em 1.5em;
     color: #fff;
     text-decoration: none;
     border: 1px solid rgba(120, 140, 255, 0.5);
@@ -109,21 +112,44 @@ h2 {
     font-weight: 600;
 }
 
-/* Handy: Buttons über dem Bild, bei Bedarf umbrechen */
-@media (max-width: 700px) {
-    .buehne { margin-top: 110px; margin-bottom: 280px; }
+/* Hochformat (Handy, Tablet): Buttons oben, darunter das auf die Person
+   zugeschnittene Bild, dann Name und Zitat */
+@media (orientation: portrait) {
+    .start { display: block; }
+    .buehne {
+        width: auto;
+        aspect-ratio: auto;
+        container-type: normal;
+        padding: calc(52vh + 40px) 20px 48px;
+        padding-top: calc(52svh + 40px);
+        /* Bild 62 % der Höhe, Person (Bildmitte bei 75,5 %) horizontal zentriert */
+        background-size: auto 62vh;
+        background-position: calc(50vw - 62vh * 1.342) 40px;
+        background-size: auto 62svh;
+        background-position: calc(50vw - 62svh * 1.342) 40px;
+    }
+    .buehne::after {
+        inset: 40px 0 auto 0;
+        height: 62vh;
+        height: 62svh;
+        background: linear-gradient(transparent 65%, #070D18);
+    }
     .intro {
-        top: 100%;
-        transform: translate(-50%, 20px);
-        width: 90vw;
+        position: relative;
+        z-index: 1;
+        top: auto;
+        left: auto;
+        transform: none;
+        width: auto;
     }
-    h1 { font-size: 2rem; }
-    blockquote { margin-top: 12px; font-size: 1rem; }
+    h1 { font-size: 2.4rem; }
+    blockquote { margin-top: 14px; font-size: 1.05rem; }
     .menue {
-        top: -100px;
-        width: 92vw;
-        flex-wrap: wrap;
-        justify-content: center;
-        white-space: normal;
+        top: 14px;
+        z-index: 2;
+        width: calc(100% - 32px);
+        gap: 8px;
+        font-size: clamp(11px, calc((100vw - 40px) / 46), 1.1rem);
     }
+    .inhalt { padding: 60px 20px; }
 }
