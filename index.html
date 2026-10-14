@@ -10,8 +10,14 @@
     <link rel="stylesheet" href="style.css">
 </head>
 <body>
+    <canvas id="netz" aria-hidden="true"></canvas>
+
     <section class="start">
     <main class="buehne">
+        <div class="person">
+            <span class="ring"></span>
+            <img src="person.png" alt="René Wahrhausen mit Mikrofon">
+        </div>
         <div class="intro">
             <h1>René Wahrhausen</h1>
             <blockquote>„Ich verbinde fundierte Industrie- und Projekterfahrung mit einer ausgeprägten Begeisterung für Digitalisierung und KI – mit dem Ziel, Prozesse durch innovative Lösungen nachhaltig zu verbessern.“</blockquote>
@@ -27,6 +33,44 @@
 
     <section id="bildungsweg" class="inhalt">
         <h2>Bildungsweg</h2>
+
+        <ol class="timeline">
+            <li class="station">
+                <span class="jahr">2007 – 2011</span>
+                <h3>Ausbildung zum Mechatroniker</h3>
+                <p class="ort">Volkswagen AG</p>
+                <p>Technische Grundausbildung an der Schnittstelle von Mechanik, Elektrotechnik und Steuerungstechnik mit starkem Praxisbezug.</p>
+                <ul class="tags">
+                    <li>Mechanik</li>
+                    <li>Elektrotechnik</li>
+                    <li>Informatik</li>
+                </ul>
+            </li>
+
+            <li class="station">
+                <span class="jahr">2012 – 2016</span>
+                <h3>Staatlich geprüfter Techniker – Maschinentechnik</h3>
+                <p class="ort">Teutloff Bildungszentrum, Braunschweig · Berufsbegleitend</p>
+                <p>Vertiefung technischer Kenntnisse in der Maschinentechnik sowie in der Planung und Optimierung technischer Abläufe.</p>
+                <ul class="tags">
+                    <li>Maschinentechnik</li>
+                    <li>Projektplanung</li>
+                    <li>Produktionsprozesse</li>
+                </ul>
+            </li>
+
+            <li class="station">
+                <span class="jahr">2016 – 2018</span>
+                <h3>Wirtschaftsingenieurwesen (B.Eng.)</h3>
+                <p class="ort">Fachhochschule des Mittelstands (FHM), Hannover · Berufsbegleitend</p>
+                <p>Verbindung von technischem Know-how und betriebswirtschaftlichem Denken mit Fokus auf wirtschaftliche Zusammenhänge und industrielle Prozesse.</p>
+                <ul class="tags">
+                    <li>Maschinenbau</li>
+                    <li>Betriebswirtschaft</li>
+                    <li>Prozessmanagement</li>
+                </ul>
+            </li>
+        </ol>
     </section>
     <script src="script.js"></script>
 </body>

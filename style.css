@@ -1,8 +1,18 @@
 body {
     margin: 0;
     font-family: "Outfit", system-ui, sans-serif;
-    background: #070D18; /* Randfarbe des Hintergrundbilds */
+    background: #070D18;
     color: #fff;
+}
+
+/* Animiertes neuronales Netz hinter der ganzen Seite (script.js) */
+#netz {
+    position: fixed;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -1;
+    pointer-events: none;
 }
 
 /* Startseite füllt das Fenster, Bühne mittig */
@@ -17,18 +27,64 @@ body {
     position: relative;
     width: min(100vw, 177.78vh);
     aspect-ratio: 16 / 9;
-    background: url("hintergrund.jpg") center / cover no-repeat;
     container-type: size;
 }
 
-/* Unterer Bildrand läuft weich in die Seitenfarbe aus */
-.buehne::after {
+/* Freigestelltes Foto: Fingerspitze bei ca. 58 % / 38 % der Bühne */
+.person {
+    position: absolute;
+    left: 56.4%;
+    top: 10.5%;
+    height: 94%;
+    aspect-ratio: 740 / 1003;
+    isolation: isolate;
+    /* Leuchtrand am Wrapper, damit die Ausblendung unten ihn nicht abschneidet */
+    filter: drop-shadow(0 0 2px rgba(170, 225, 255, 0.9))
+            drop-shadow(0 0 28px rgba(120, 90, 255, 0.55));
+}
+
+.person img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    /* unten weich ausblenden */
+    -webkit-mask-image: linear-gradient(#000 78%, transparent 96%);
+    mask-image: linear-gradient(#000 78%, transparent 96%);
+}
+
+/* Lila Schein hinter der Person */
+.person::before {
     content: "";
     position: absolute;
-    inset: auto 0 0 0;
-    height: 18%;
-    background: linear-gradient(transparent, #070D18);
-    pointer-events: none;
+    inset: -12% -25% 25% -10%;
+    z-index: -2;
+    background: radial-gradient(closest-side, rgba(90, 60, 230, 0.4), transparent);
+}
+
+/* Langsam drehender Ring um den Kopf */
+.ring {
+    position: absolute;
+    left: 40%;
+    top: -2.5%;
+    width: 51%;
+    aspect-ratio: 1;
+    z-index: -1;
+    border-radius: 50%;
+    border: 1px dashed rgba(130, 140, 255, 0.25);
+}
+
+.ring::before {
+    content: "";
+    position: absolute;
+    inset: -1px;
+    border-radius: 50%;
+    border: 3px solid transparent;
+    border-top-color: #2fb7c9;
+    animation: drehen 30s linear infinite;
+}
+
+@keyframes drehen {
+    to { transform: rotate(360deg); }
 }
 
 /* Name und Zitat links neben der zeigenden Hand (Größen relativ zur Bühne) */
@@ -112,27 +168,135 @@ h2 {
     font-weight: 600;
 }
 
-/* Hochformat (Handy, Tablet): Buttons oben, darunter das auf die Person
-   zugeschnittene Bild, dann Name und Zitat */
+/* Timeline: Linie füllt sich beim Scrollen, Stationen gleiten herein */
+.timeline {
+    position: relative;
+    max-width: 860px;
+    margin: 60px 0 0;
+    padding: 0 0 0 48px;
+    list-style: none;
+}
+
+/* Schiene */
+.timeline::before {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: rgba(120, 140, 255, 0.15);
+}
+
+/* Gefüllter Teil der Schiene, Höhe setzt script.js */
+.timeline::after {
+    content: "";
+    position: absolute;
+    left: 11px;
+    top: 0;
+    width: 2px;
+    height: var(--fortschritt, 100%);
+    background: linear-gradient(#6ee7f9, #8b7cff);
+    box-shadow: 0 0 12px rgba(110, 230, 250, 0.7);
+}
+
+.station {
+    position: relative;
+    margin-bottom: 40px;
+    padding: 28px 32px;
+    border: 1px solid rgba(120, 140, 255, 0.25);
+    border-radius: 18px;
+    background: rgba(20, 28, 60, 0.45);
+    backdrop-filter: blur(8px);
+    transition: opacity 0.8s, transform 0.8s, border-color 0.3s, box-shadow 0.3s;
+}
+
+.station:hover {
+    border-color: rgba(110, 230, 250, 0.5);
+    box-shadow: 0 0 30px rgba(110, 90, 255, 0.25);
+}
+
+/* Leuchtender, pulsierender Knoten auf der Schiene */
+.station::before {
+    content: "";
+    position: absolute;
+    left: -44px;
+    top: 34px;
+    width: 14px;
+    height: 14px;
+    border-radius: 50%;
+    background: #6ee7f9;
+    box-shadow: 0 0 0 4px rgba(110, 230, 250, 0.15), 0 0 16px #6ee7f9;
+    animation: pulsieren 2.4s ease-in-out infinite;
+}
+
+@keyframes pulsieren {
+    50% { box-shadow: 0 0 0 9px rgba(110, 230, 250, 0), 0 0 26px #8b7cff; }
+}
+
+/* Vor dem Hereingleiten (Klasse setzt script.js) */
+.timeline.animiert .station:not(.sichtbar) {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+.jahr {
+    font-size: 0.95rem;
+    font-weight: 600;
+    letter-spacing: 0.08em;
+    color: #6ee7f9;
+}
+
+h3 {
+    margin: 6px 0 4px;
+    font-size: clamp(1.25rem, 2.2vw, 1.6rem);
+    font-weight: 600;
+}
+
+.ort {
+    margin: 0 0 14px;
+    font-size: 0.95rem;
+    color: #a5b4fc;
+}
+
+.station p {
+    line-height: 1.6;
+    color: #d6dbf5;
+    font-weight: 300;
+}
+
+.tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+    margin: 16px 0 0;
+    padding: 0;
+    list-style: none;
+}
+
+.tags li {
+    padding: 4px 14px;
+    font-size: 0.85rem;
+    border: 1px solid rgba(120, 140, 255, 0.4);
+    border-radius: 999px;
+    background: rgba(40, 50, 120, 0.3);
+}
+
+/* Hochformat (Handy, Tablet): Buttons oben, darunter Foto, dann Name und Zitat */
 @media (orientation: portrait) {
     .start { display: block; }
     .buehne {
+        --foto: min(58vh, (100vw - 24px) * 1.355);
         width: auto;
         aspect-ratio: auto;
         container-type: normal;
-        padding: calc(52vh + 40px) 20px 48px;
-        padding-top: calc(52svh + 40px);
-        /* Bild 62 % der Höhe, Person (Bildmitte bei 75,5 %) horizontal zentriert */
-        background-size: auto 62vh;
-        background-position: calc(50vw - 62vh * 1.342) 40px;
-        background-size: auto 62svh;
-        background-position: calc(50vw - 62svh * 1.342) 40px;
+        padding: calc(100px + var(--foto) * 0.86) 20px 48px;
     }
-    .buehne::after {
-        inset: 40px 0 auto 0;
-        height: 62vh;
-        height: 62svh;
-        background: linear-gradient(transparent 65%, #070D18);
+    .person {
+        top: 100px;
+        left: 50%;
+        height: var(--foto);
+        transform: translateX(-50%);
     }
     .intro {
         position: relative;
@@ -152,4 +316,11 @@ h2 {
         font-size: clamp(11px, calc((100vw - 40px) / 46), 1.1rem);
     }
     .inhalt { padding: 60px 20px; }
+    .timeline { padding-left: 36px; margin-top: 40px; }
+    .station { padding: 22px 20px; }
+    .station::before { left: -32px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .ring::before, .station::before { animation: none; }
 }
