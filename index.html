@@ -8,6 +8,8 @@
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&display=swap">
     <link rel="stylesheet" href="style.css">
+    <link rel="stylesheet" href="nav.css">
+    <link rel="stylesheet" href="hobbys.css">
 </head>
 <body>
     <canvas id="netz" aria-hidden="true"></canvas>
@@ -22,11 +24,41 @@
             <h1>René Wahrhausen</h1>
             <blockquote>„Ich verbinde fundierte Industrie- und Projekterfahrung mit einer ausgeprägten Begeisterung für Digitalisierung und KI – mit dem Ziel, Prozesse durch innovative Lösungen nachhaltig zu verbessern.“</blockquote>
         </div>
-        <nav class="menue">
-            <a href="#bildungsweg">Bildungsweg</a>
-            <a href="#werdegang">Beruflicher Werdegang</a>
-            <a href="#kompetenzen">Kompetenzen</a>
-            <a href="#daten">Persönliche Daten</a>
+        <!-- Glas-Navigationsleiste (Styles: nav.css, Verhalten: nav.js) -->
+        <nav class="navleiste" aria-label="Hauptnavigation">
+            <button class="nav-menue-knopf" type="button" aria-expanded="false" aria-controls="nav-links">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+                Menü
+            </button>
+
+            <ul class="nav-links" id="nav-links">
+                <li><a href="#bildungsweg">Bildungsweg</a></li>
+                <li><a href="#werdegang">Beruflicher Werdegang</a></li>
+                <li><a href="#kompetenzen">Kompetenzen</a></li>
+                <li><a href="#hobbys">Hobbys</a></li>
+            </ul>
+
+            <div class="nav-aktionen">
+                <a class="nav-icon" href="https://www.linkedin.com/in/ren%C3%A9-wahrhausen-184ab0356"
+                   target="_blank" rel="noopener noreferrer"
+                   title="LinkedIn-Profil" aria-label="LinkedIn-Profil (öffnet in neuem Tab)">
+                    <svg viewBox="0 0 24 24" aria-hidden="true" class="gefuellt"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+                </a>
+                <button class="nav-icon" type="button" id="kontakt-knopf"
+                        aria-expanded="false" aria-controls="kontaktkarte"
+                        title="Kontakt" aria-label="Kontaktdaten anzeigen">
+                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+                </button>
+            </div>
+
+            <div class="kontaktkarte" id="kontaktkarte" role="dialog" aria-labelledby="kontakt-titel" tabindex="-1">
+                <p class="kontakt-titel" id="kontakt-titel">Kontakt</p>
+                <address>
+                    <strong>René Wahrhausen</strong>
+                    <span>Mühlenblick 5<br>38528 Adenbüttel</span>
+                    <a href="mailto:wahrhausen@gmx.de">wahrhausen@gmx.de</a>
+                </address>
+            </div>
         </nav>
     </main>
     </section>
@@ -197,6 +229,88 @@
             </div>
         </div>
     </section>
+    <section id="hobbys" class="inhalt hobbys">
+        <h2>Hobbys</h2>
+
+        <!-- 1: Text links, Foto rechts -->
+        <article class="hobby hobby-reisen">
+            <div class="hobby-text">
+                <h3>Reisen, Tauchen &amp; Angeln</h3>
+                <p>Neue Orte entdecken, die Natur erleben und außergewöhnliche Eindrücke sammeln – besonders beim Reisen und Tauchen. Auch das Angeln bietet für mich einen Ausgleich und die Möglichkeit, Zeit draußen zu verbringen.</p>
+                <ul class="tags">
+                    <li>Reisen</li>
+                    <li>Tauchen</li>
+                    <li>Angeln</li>
+                </ul>
+            </div>
+            <figure class="hobby-foto foto-strand">
+                <img src="images/hobbies/travel-palm-beach.jpg" width="1200" height="1600" loading="lazy"
+                     alt="René lachend mit einer Kokosnuss an einem tropischen Strand neben einer schräg gewachsenen Palme">
+                <figcaption>Reisen</figcaption>
+            </figure>
+        </article>
+
+        <!-- 2: Foto links, Text rechts -->
+        <article class="hobby hobby-sport">
+            <figure class="hobby-foto foto-ziel">
+                <img src="images/hobbies/running-finish-line.jpg" width="1254" height="1254" loading="lazy"
+                     alt="René läuft mit ausgebreiteten Armen durchs Ziel, eingeblendet: 7:49:31 Stunden, 60,02 km, 7'49'' pro km">
+            </figure>
+            <div class="hobby-text">
+                <h3>Sport &amp; persönliche Herausforderungen</h3>
+                <p>Sport ist für mich der Ausgleich zum Berufsalltag und eine Möglichkeit, persönliche Grenzen auszuloten. Laufen, Fitness und HYROX verbinden körperliche Leistungsfähigkeit mit Disziplin, Zielorientierung und kontinuierlicher Weiterentwicklung.</p>
+                <ul class="tags">
+                    <li>Laufen</li>
+                    <li>HYROX</li>
+                    <li>Fitness</li>
+                </ul>
+            </div>
+        </article>
+
+        <!-- 3 + 4: kompakte Icon-Karten, KI breiter -->
+        <div class="hobby-paar">
+            <article class="hobby hobby-karte hobby-finanzen">
+                <span class="hobby-icon" aria-hidden="true">
+                    <!-- Lucide "chart-candlestick" -->
+                    <svg viewBox="0 0 24 24"><path d="M9 5v4"/><rect width="4" height="6" x="7" y="9" rx="1"/><path d="M9 15v2"/><path d="M17 3v2"/><rect width="4" height="8" x="15" y="5" rx="1"/><path d="M17 13v3"/><path d="M3 3v18h18"/></svg>
+                </span>
+                <h3>Wirtschaft &amp; Investments</h3>
+                <p>Mich interessieren wirtschaftliche Zusammenhänge, die Entwicklung der Finanzmärkte und unterschiedliche Möglichkeiten des langfristigen Vermögensaufbaus. Besonders beschäftige ich mich mit Aktien, ETFs und verschiedenen Anlagestrategien.</p>
+                <ul class="tags">
+                    <li>Finanzmärkte</li>
+                    <li>Aktien</li>
+                    <li>ETFs</li>
+                    <li>Anlagestrategien</li>
+                </ul>
+            </article>
+
+            <article class="hobby hobby-karte hobby-ki">
+                <div class="hobby-icons" aria-hidden="true">
+                    <span class="hobby-icon">
+                        <!-- Lucide "code-xml" -->
+                        <svg viewBox="0 0 24 24"><path d="m18 16 4-4-4-4"/><path d="m6 8-4 4 4 4"/><path d="m14.5 4-5 16"/></svg>
+                    </span>
+                    <span class="hobby-icon klein">
+                        <!-- Lucide "cpu" -->
+                        <svg viewBox="0 0 24 24"><rect width="16" height="16" x="4" y="4" rx="2"/><rect width="6" height="6" x="9" y="9" rx="1"/><path d="M15 2v2M15 20v2M2 15h2M2 9h2M20 15h2M20 9h2M9 2v2M9 20v2"/></svg>
+                    </span>
+                    <span class="hobby-icon klein">
+                        <!-- Lucide "smartphone" -->
+                        <svg viewBox="0 0 24 24"><rect width="14" height="20" x="5" y="2" rx="2"/><path d="M12 18h.01"/></svg>
+                    </span>
+                </div>
+                <h3>KI &amp; digitale Projekte</h3>
+                <p>Ich beschäftige mich mit den Möglichkeiten künstlicher Intelligenz und nutze KI-gestützte Werkzeuge, um eigene digitale Ideen umzusetzen. Dazu gehören die Gestaltung und Entwicklung persönlicher Webseiten sowie die Konzeption und Umsetzung von Apps und digitalen Anwendungen.</p>
+                <ul class="tags">
+                    <li>Künstliche Intelligenz</li>
+                    <li>KI-gestützte Entwicklung</li>
+                    <li>Webentwicklung</li>
+                    <li>Apps</li>
+                </ul>
+            </article>
+        </div>
+    </section>
     <script src="script.js"></script>
+    <script src="nav.js"></script>
 </body>
 </html>

@@ -1,10 +1,10 @@
 // Langsames, weiches Scrollen zu den Bereichen
 const DAUER = 1600; // Millisekunden
 
-document.querySelectorAll('.menue a[href^="#"]').forEach(link => {
+document.querySelectorAll('.navleiste a[href^="#"]').forEach(link => {
     link.addEventListener("click", e => {
         const ziel = document.querySelector(link.getAttribute("href"));
-        if (!ziel) return;
+        if (!ziel || matchMedia("(prefers-reduced-motion: reduce)").matches) return;
         e.preventDefault();
 
         const start = window.scrollY;
@@ -182,3 +182,10 @@ function verbindungenZeichnen() {
 addEventListener("resize", verbindungenZeichnen);
 document.fonts.ready.then(verbindungenZeichnen);
 verbindungenZeichnen();
+
+// Hobbys: Bereiche gleiten beim Erreichen herein (nutzt den Timeline-Beobachter)
+const hobbys = document.querySelector(".hobbys");
+if (hobbys) {
+    hobbys.classList.add("animiert");
+    hobbys.querySelectorAll(".hobby").forEach(h => beobachter.observe(h));
+}

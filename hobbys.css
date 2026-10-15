@@ -1,0 +1,296 @@
+/* Hobbys: vier unterschiedlich aufgebaute Bereiche
+   1 Reisen  – Text links, Foto rechts
+   2 Sport   – Foto links, Text rechts (beide Fotos gleich groß)
+   3+4       – kompakte Icon-Karten (Finanzen schmaler, KI breiter) */
+
+.hobby {
+    max-width: 1180px;
+    margin-top: 72px;
+    transition: opacity 0.9s, transform 0.9s;
+}
+
+.hobby h3 {
+    margin: 0 0 14px;
+    font-size: clamp(1.4rem, 2.3vw, 1.9rem);
+}
+
+.hobby p {
+    margin: 0;
+    line-height: 1.7;
+    font-weight: 300;
+    color: #d6dbf5;
+}
+
+/* Glas-Textkarte, wie Timeline und Kompetenzen */
+.hobby-text,
+.hobby-karte {
+    position: relative;
+    padding: 32px;
+    border: 1px solid rgba(120, 140, 255, 0.25);
+    border-radius: 20px;
+    background: rgba(16, 22, 50, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+/* --- Fotos --- */
+.hobby-foto {
+    position: relative;
+    margin: 0;
+    overflow: hidden;
+    border: 1px solid rgba(120, 140, 255, 0.25);
+    border-radius: 20px;
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+}
+
+.hobby-foto img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transition: transform 1.2s ease-out;
+}
+
+.hobby-foto:hover img {
+    transform: scale(1.03);
+}
+
+/* leichte Abdunklung am unteren Rand für den Cinematic-Look und lesbare Beschriftung */
+.hobby-foto::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(transparent 65%, rgba(7, 13, 24, 0.55));
+    pointer-events: none;
+}
+
+.hobby-foto figcaption {
+    position: absolute;
+    left: 16px;
+    bottom: 16px;
+    z-index: 1;
+    padding: 5px 14px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    border: 1px solid rgba(255, 255, 255, 0.18);
+    border-radius: 999px;
+    background: rgba(14, 20, 44, 0.5);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+}
+
+/* --- 1 Reisen + 2 Sport: Text und quadratisches Foto, gespiegelt --- */
+.hobby-reisen,
+.hobby-sport {
+    --foto-breite: 400px;
+    display: grid;
+    gap: 28px;
+    align-items: center;
+}
+
+.hobby-reisen {
+    grid-template-columns: 1fr var(--foto-breite);
+}
+
+.hobby-sport {
+    grid-template-columns: var(--foto-breite) 1fr;
+}
+
+.foto-strand,
+.foto-ziel {
+    aspect-ratio: 1;
+}
+
+.foto-strand img {
+    object-position: 50% 62%; /* Person ganz im Bild, oben etwas Himmel weg */
+}
+
+.foto-ziel {
+    border-color: rgba(110, 231, 249, 0.35);
+    box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45), 0 0 80px rgba(110, 90, 255, 0.2);
+}
+
+.foto-ziel::after {
+    display: none; /* Laufdaten im Foto nicht abdunkeln */
+}
+
+/* energiegeladene Akzentlinie oben an der Sport-Karte */
+.hobby-sport .hobby-text {
+    overflow: hidden;
+}
+
+.hobby-sport .hobby-text::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    right: 0;
+    top: 0;
+    height: 2px;
+    background: linear-gradient(90deg, #6ee7f9, #8b7cff, transparent);
+}
+
+/* --- 3 + 4 Icon-Karten --- */
+.hobby-paar {
+    display: grid;
+    grid-template-columns: 1fr 1.35fr;
+    gap: 28px;
+    max-width: 1180px;
+}
+
+.hobby-paar .hobby {
+    margin-top: 72px;
+}
+
+.hobby-karte {
+    overflow: hidden;
+}
+
+.hobby-icons {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.hobby-icon {
+    display: inline-grid;
+    place-items: center;
+    width: 56px;
+    height: 56px;
+    margin-bottom: 22px;
+    border: 1px solid;
+    border-radius: 16px;
+}
+
+.hobby-icon.klein {
+    width: 40px;
+    height: 40px;
+    border-radius: 12px;
+    opacity: 0.8;
+}
+
+.hobby-icon svg {
+    width: 26px;
+    height: 26px;
+    fill: none;
+    stroke: currentColor;
+    stroke-width: 1.7;
+    stroke-linecap: round;
+    stroke-linejoin: round;
+}
+
+.hobby-icon.klein svg {
+    width: 18px;
+    height: 18px;
+}
+
+/* Finanzen: Akzent Limette */
+.hobby-finanzen .hobby-icon {
+    color: #c8e65a;
+    border-color: rgba(200, 230, 90, 0.35);
+    background: rgba(200, 230, 90, 0.08);
+    box-shadow: 0 0 24px rgba(200, 230, 90, 0.15);
+}
+
+.hobby-finanzen {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(200, 230, 90, 0.08), transparent 45%),
+        rgba(16, 22, 50, 0.6);
+}
+
+/* KI: Akzent Cyan/Lila mit dezentem Punktraster */
+.hobby-ki .hobby-icon {
+    color: #6ee7f9;
+    border-color: rgba(110, 231, 249, 0.35);
+    background: rgba(110, 231, 249, 0.08);
+    box-shadow: 0 0 24px rgba(110, 231, 249, 0.2);
+}
+
+.hobby-ki .hobby-icon.klein {
+    color: #a5b4fc;
+    border-color: rgba(139, 124, 255, 0.35);
+    background: rgba(139, 124, 255, 0.08);
+    box-shadow: none;
+}
+
+.hobby-ki {
+    background:
+        radial-gradient(circle at 100% 0%, rgba(139, 124, 255, 0.16), transparent 50%),
+        rgba(16, 22, 50, 0.6);
+}
+
+.hobby-ki::before {
+    content: "";
+    position: absolute;
+    inset: 0;
+    background-image: radial-gradient(rgba(110, 231, 249, 0.18) 1px, transparent 1px);
+    background-size: 18px 18px;
+    -webkit-mask-image: radial-gradient(circle at 100% 0%, #000, transparent 55%);
+    mask-image: radial-gradient(circle at 100% 0%, #000, transparent 55%);
+    pointer-events: none;
+}
+
+/* Inhalt über dem Punktraster */
+.hobby-ki > * {
+    position: relative;
+}
+
+/* --- Einblenden beim Scrollen (Klasse setzt script.js) --- */
+.hobbys.animiert .hobby:not(.sichtbar) {
+    opacity: 0;
+    transform: translateY(40px);
+}
+
+/* --- Tablet --- */
+@media (max-width: 1000px) {
+    /* untereinander, Foto gleich groß und mittig */
+    .hobby-reisen,
+    .hobby-sport {
+        grid-template-columns: 1fr;
+    }
+
+    .foto-strand,
+    .foto-ziel {
+        width: min(100%, var(--foto-breite));
+        justify-self: center;
+    }
+
+    /* Sport: Text über dem Foto, wie bei Reisen */
+    .hobby-sport .hobby-text {
+        order: -1;
+    }
+
+    .hobby-paar {
+        grid-template-columns: 1fr;
+        gap: 0;
+    }
+}
+
+/* --- Smartphone --- */
+@media (max-width: 560px) {
+    .hobby {
+        margin-top: 48px;
+    }
+
+    .hobby-paar .hobby {
+        margin-top: 24px;
+    }
+
+    .hobby-text,
+    .hobby-karte {
+        padding: 24px 20px;
+    }
+
+    .hobby-foto figcaption {
+        left: 10px;
+        bottom: 10px;
+        font-size: 0.75rem;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+    .hobby,
+    .hobby-foto img {
+        transition: none;
+    }
+}

@@ -121,39 +121,6 @@ blockquote {
     color: #d6dbf5;
 }
 
-/* Buttons oben zentriert nebeneinander, schrumpfen mit der Bühne */
-.menue {
-    position: absolute;
-    top: 4%;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 94%;
-    display: flex;
-    flex-wrap: wrap;
-    justify-content: center;
-    gap: clamp(6px, 1.4cqw, 20px);
-    white-space: nowrap;
-    font-size: clamp(11px, 1.3cqw, 1.3rem);
-}
-
-.menue a {
-    padding: 0.6em 1.5em;
-    color: #fff;
-    text-decoration: none;
-    border: 1px solid rgba(120, 140, 255, 0.5);
-    border-radius: 999px;
-    background: rgba(40, 50, 120, 0.35);
-    backdrop-filter: blur(6px);
-    box-shadow: 0 0 12px rgba(110, 90, 255, 0.35);
-    transition: transform 0.2s, box-shadow 0.2s, background 0.2s;
-}
-
-.menue a:hover {
-    transform: translateY(-3px);
-    background: rgba(90, 80, 220, 0.6);
-    box-shadow: 0 0 24px rgba(110, 230, 250, 0.6);
-}
-
 /* Unterseiten: dunkel und schlicht */
 .inhalt {
     min-height: 100vh;
@@ -402,7 +369,7 @@ h3 {
     width: 0;
 }
 
-/* Hochformat (Handy, Tablet): Buttons oben, darunter Foto, dann Name und Zitat */
+/* Hochformat (Handy, Tablet): Navigation oben, darunter Foto, dann Name und Zitat */
 @media (orientation: portrait) {
     .start { display: block; }
     .buehne {
@@ -410,10 +377,10 @@ h3 {
         width: auto;
         aspect-ratio: auto;
         container-type: normal;
-        padding: calc(100px + var(--foto) * 0.86) 20px 48px;
+        padding: calc(90px + var(--foto) * 0.86) 20px 48px;
     }
     .person {
-        top: 100px;
+        top: 90px;
         left: 50%;
         height: var(--foto);
         transform: translateX(-50%);
@@ -428,13 +395,6 @@ h3 {
     }
     h1 { font-size: 2.4rem; }
     blockquote { margin-top: 14px; font-size: 1.05rem; }
-    .menue {
-        top: 14px;
-        z-index: 2;
-        width: calc(100% - 32px);
-        gap: 8px;
-        font-size: clamp(11px, calc((100vw - 40px) / 46), 1.1rem);
-    }
     .inhalt { padding: 60px 20px; }
     .timeline { padding-left: 36px; margin-top: 40px; }
     .station { padding: 22px 20px; }
