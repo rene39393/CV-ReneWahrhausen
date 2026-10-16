@@ -1,0 +1,92 @@
+/* Impressum und Datenschutz: schlichte Textseite im Stil der Hauptseite
+   (Grundfarben, Schrift und Netz-Hintergrund kommen aus style.css/script.js) */
+
+.rechtliches {
+    max-width: 760px;
+    margin: 0 auto;
+    padding: 72px 24px 48px;
+}
+
+.zurueck {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 0.9rem;
+    color: #a5b4fc;
+    text-decoration: none;
+    border-radius: 6px;
+    transition: color 0.25s;
+}
+
+.zurueck:hover {
+    color: #fff;
+}
+
+.zurueck:focus-visible {
+    outline: 2px solid #6ee7f9;
+    outline-offset: 4px;
+}
+
+.rechtliches h1 {
+    margin: 32px 0 32px;
+    font-size: clamp(2.2rem, 6vw, 3.4rem);
+}
+
+/* Glas-Karte wie bei Timeline und Hobbys */
+.rechtliches-karte {
+    padding: 8px 36px 32px;
+    border: 1px solid rgba(120, 140, 255, 0.25);
+    border-radius: 20px;
+    background: rgba(16, 22, 50, 0.6);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+}
+
+.rechtliches h2 {
+    display: block;
+    margin: 32px 0 10px;
+    font-size: 1.25rem;
+    letter-spacing: 0.01em;
+}
+
+.rechtliches h3 {
+    margin: 22px 0 6px;
+    font-size: 1.02rem;
+    color: #fff;
+}
+
+.rechtliches p,
+.rechtliches li,
+.rechtliches address {
+    line-height: 1.7;
+    font-weight: 300;
+    font-style: normal;
+    color: #d6dbf5;
+}
+
+.rechtliches p,
+.rechtliches address {
+    margin: 0 0 12px;
+}
+
+.rechtliches ul {
+    margin: 0 0 12px;
+    padding-left: 20px;
+}
+
+.rechtliches a:not(.zurueck) {
+    color: #6ee7f9;
+    text-underline-offset: 3px;
+    text-decoration-color: rgba(110, 231, 249, 0.4);
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 560px) {
+    .rechtliches {
+        padding-top: 48px;
+    }
+
+    .rechtliches-karte {
+        padding: 4px 20px 24px;
+    }
+}

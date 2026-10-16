@@ -9,15 +9,51 @@
     <link rel="apple-touch-icon" href="apple-touch-icon.png">
     <link rel="manifest" href="site.webmanifest">
     <meta name="theme-color" content="#070D18">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Outfit:wght@200;300;400;600&display=swap">
+    <link rel="preload" href="fonts/outfit-latin.woff2" as="font" type="font/woff2" crossorigin>
     <link rel="stylesheet" href="style.css">
     <link rel="stylesheet" href="nav.css">
     <link rel="stylesheet" href="hobbys.css">
 </head>
 <body>
     <canvas id="netz" aria-hidden="true"></canvas>
+
+    <!-- Glas-Navigationsleiste (Styles: nav.css, Verhalten: nav.js).
+         Liegt außerhalb der Bühne, damit position: fixed sich aufs Fenster bezieht. -->
+    <nav class="navleiste" aria-label="Hauptnavigation">
+        <button class="nav-menue-knopf" type="button" aria-expanded="false" aria-controls="nav-links">
+            <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
+            <span class="nav-menue-text">Menü</span>
+        </button>
+
+        <ul class="nav-links" id="nav-links">
+            <li><a href="#bildungsweg">Bildungsweg</a></li>
+            <li><a href="#werdegang">Beruflicher Werdegang</a></li>
+            <li><a href="#kompetenzen">Kompetenzen</a></li>
+            <li><a href="#hobbys">Hobbys</a></li>
+        </ul>
+
+        <div class="nav-aktionen">
+            <a class="nav-icon" href="https://www.linkedin.com/in/ren%C3%A9-wahrhausen-184ab0356"
+               target="_blank" rel="noopener noreferrer"
+               title="LinkedIn-Profil" aria-label="LinkedIn-Profil (öffnet in neuem Tab)">
+                <svg viewBox="0 0 24 24" aria-hidden="true" class="gefuellt"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
+            </a>
+            <button class="nav-icon" type="button" id="kontakt-knopf"
+                    aria-expanded="false" aria-controls="kontaktkarte"
+                    title="Kontakt" aria-label="Kontaktdaten anzeigen">
+                <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
+            </button>
+        </div>
+
+        <div class="kontaktkarte" id="kontaktkarte" role="dialog" aria-labelledby="kontakt-titel" tabindex="-1">
+            <p class="kontakt-titel" id="kontakt-titel">Kontakt</p>
+            <address>
+                <strong>René Wahrhausen</strong>
+                <span>Mühlenblick 5<br>38528 Adenbüttel</span>
+                <a href="mailto:wahrhausen@gmx.de">wahrhausen@gmx.de</a>
+            </address>
+        </div>
+    </nav>
 
     <section class="start">
     <main class="buehne">
@@ -29,42 +65,6 @@
             <h1>René Wahrhausen</h1>
             <blockquote>„Ich verbinde fundierte Industrie- und Projekterfahrung mit einer ausgeprägten Begeisterung für Digitalisierung und KI – mit dem Ziel, Prozesse durch innovative Lösungen nachhaltig zu verbessern.“</blockquote>
         </div>
-        <!-- Glas-Navigationsleiste (Styles: nav.css, Verhalten: nav.js) -->
-        <nav class="navleiste" aria-label="Hauptnavigation">
-            <button class="nav-menue-knopf" type="button" aria-expanded="false" aria-controls="nav-links">
-                <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M4 7h16M4 12h16M4 17h16"/></svg>
-                Menü
-            </button>
-
-            <ul class="nav-links" id="nav-links">
-                <li><a href="#bildungsweg">Bildungsweg</a></li>
-                <li><a href="#werdegang">Beruflicher Werdegang</a></li>
-                <li><a href="#kompetenzen">Kompetenzen</a></li>
-                <li><a href="#hobbys">Hobbys</a></li>
-            </ul>
-
-            <div class="nav-aktionen">
-                <a class="nav-icon" href="https://www.linkedin.com/in/ren%C3%A9-wahrhausen-184ab0356"
-                   target="_blank" rel="noopener noreferrer"
-                   title="LinkedIn-Profil" aria-label="LinkedIn-Profil (öffnet in neuem Tab)">
-                    <svg viewBox="0 0 24 24" aria-hidden="true" class="gefuellt"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.35V9h3.41v1.56h.05c.48-.9 1.64-1.85 3.37-1.85 3.6 0 4.27 2.37 4.27 5.46v6.28zM5.34 7.43a2.06 2.06 0 1 1 0-4.13 2.06 2.06 0 0 1 0 4.13zM7.12 20.45H3.56V9h3.56v11.45zM22.22 0H1.77C.79 0 0 .77 0 1.73v20.54C0 23.23.79 24 1.77 24h20.45c.98 0 1.78-.77 1.78-1.73V1.73C24 .77 23.2 0 22.22 0z"/></svg>
-                </a>
-                <button class="nav-icon" type="button" id="kontakt-knopf"
-                        aria-expanded="false" aria-controls="kontaktkarte"
-                        title="Kontakt" aria-label="Kontaktdaten anzeigen">
-                    <svg viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="8" r="4"/><path d="M4 21c0-4.4 3.6-7 8-7s8 2.6 8 7"/></svg>
-                </button>
-            </div>
-
-            <div class="kontaktkarte" id="kontaktkarte" role="dialog" aria-labelledby="kontakt-titel" tabindex="-1">
-                <p class="kontakt-titel" id="kontakt-titel">Kontakt</p>
-                <address>
-                    <strong>René Wahrhausen</strong>
-                    <span>Mühlenblick 5<br>38528 Adenbüttel</span>
-                    <a href="mailto:wahrhausen@gmx.de">wahrhausen@gmx.de</a>
-                </address>
-            </div>
-        </nav>
     </main>
     </section>
 
@@ -307,6 +307,12 @@
             </article>
         </div>
     </section>
+    <footer class="fusszeile">
+        <span>© 2026 René Wahrhausen</span>
+        <a href="impressum.html">Impressum</a>
+        <a href="datenschutz.html">Datenschutz</a>
+    </footer>
+
     <script src="script.js"></script>
     <script src="nav.js"></script>
 </body>

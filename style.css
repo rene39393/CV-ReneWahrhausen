@@ -1,3 +1,24 @@
+/* Schrift "Outfit" lokal eingebunden (SIL Open Font License, fonts/OFL.txt),
+   damit beim Seitenaufruf keine Verbindung zu Google entsteht.
+   Variable Schrift; Stärken wie zuvor bei Google Fonts auf 200–600 begrenzt. */
+@font-face {
+    font-family: "Outfit";
+    font-style: normal;
+    font-weight: 200 600;
+    font-display: swap;
+    src: url("fonts/outfit-latin-ext.woff2") format("woff2");
+    unicode-range: U+0100-02BA, U+02BD-02C5, U+02C7-02CC, U+02CE-02D7, U+02DD-02FF, U+0304, U+0308, U+0329, U+1D00-1DBF, U+1E00-1E9F, U+1EF2-1EFF, U+2020, U+20A0-20AB, U+20AD-20C4, U+2113, U+2C60-2C7F, U+A720-A7FF;
+}
+
+@font-face {
+    font-family: "Outfit";
+    font-style: normal;
+    font-weight: 200 600;
+    font-display: swap;
+    src: url("fonts/outfit-latin.woff2") format("woff2");
+    unicode-range: U+0000-00FF, U+0131, U+0152-0153, U+02BB-02BC, U+02C6, U+02DA, U+02DC, U+0304, U+0308, U+0329, U+2000-206F, U+20AC, U+2122, U+2191, U+2193, U+2212, U+2215, U+FEFF, U+FFFD;
+}
+
 body {
     margin: 0;
     font-family: "Outfit", system-ui, sans-serif;
@@ -15,11 +36,14 @@ body {
     pointer-events: none;
 }
 
-/* Startseite füllt das Fenster, Bühne mittig */
+/* Startseite füllt das Fenster, Bühne mittig.
+   overflow-x: clip schneidet den Leuchtschein am Fensterrand ab,
+   sonst ließe sich die Seite seitlich scrollen */
 .start {
     min-height: 100vh;
     display: grid;
     place-items: center;
+    overflow-x: clip;
 }
 
 /* Bühne im Bildformat 16:9, damit die Buttons immer vor der Hand stehen */
@@ -406,4 +430,45 @@ h3 {
 
 @media (prefers-reduced-motion: reduce) {
     .ring::before, .station::before, .kachel::before, .verbindungen line { animation: none; }
+}
+
+/* Dezente Fußzeile mit Impressum und Datenschutz (alle Seiten) */
+.fusszeile {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 8px 24px;
+    padding: 32px 20px 40px;
+    font-size: 0.8rem;
+    letter-spacing: 0.02em;
+    color: rgba(165, 180, 252, 0.75);
+}
+
+.fusszeile a {
+    color: rgba(214, 219, 245, 0.7);
+    text-decoration: none;
+    border-radius: 4px;
+    transition: color 0.25s;
+}
+
+.fusszeile a:hover,
+.fusszeile a[aria-current] {
+    color: #fff;
+}
+
+.fusszeile a:focus-visible {
+    outline: 2px solid #6ee7f9;
+    outline-offset: 3px;
+}
+
+/* Handy: rechts Platz für die angedockte Navigationskapsel (nav.css),
+   die Links brechen daneben um statt darunter zu liegen */
+@media (max-width: 820px) {
+    .fusszeile { padding: 32px 76px 40px 20px; }
+}
+
+/* Platz für das rechts angedockte Navigationsband (nav.css);
+   steht am Ende, damit es auch die Hochformat-Abstände überschreibt */
+@media (min-width: 1100px) {
+    .inhalt { padding-right: 280px; }
 }
