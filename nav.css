@@ -1,9 +1,10 @@
 /* Glas-Navigationsleiste
    Zustände (Klassen setzt nav.js):
    - Grundzustand:  oben mittig fixiert, Links mittig, LinkedIn/Kontakt rechts
-   - .angedockt:    Startseite verlassen, senkrechtes Band am rechten Rand
-   - .kompakt:      schmale Fenster (≤ 820 px, angedockt < 1100 px):
-                    Menü-Knopf statt Linkliste; angedockt als Kapsel unten rechts */
+   - .angedockt:    Startseite verlassen, schmale Glasleiste am rechten Rand
+   - .kompakt:      schmale Fenster (≤ 820 px, angedockt auch bei < 700 px Höhe):
+                    Menü-Knopf statt Linkliste; angedockt als Kapsel unten rechts
+   - .verwandelt:   Übergang zwischen oben und angedockt, an die Scrollposition gekoppelt */
 
 .navleiste {
     --glas: rgba(14, 20, 44, 0.45);
@@ -177,6 +178,100 @@
     display: none;
 }
 
+/* --- Gemeinsamer Look für Leiste oben und Seitenleiste (nicht kompakt) ---
+   Dünne Schrift mit Buchstabenabstand, feine Trennstriche, Lichtpunkt am
+   aktiven Begriff, kleine Icons. Nur die Ausrichtung unterscheidet sich. */
+.navleiste:not(.kompakt) .nav-links {
+    gap: 0;
+}
+
+.navleiste:not(.kompakt) .nav-links li {
+    position: relative;
+}
+
+.navleiste:not(.kompakt) .nav-links a {
+    padding: 0.6em 1.3em;
+    font-weight: 300;
+    letter-spacing: 0.1em;
+    color: rgba(230, 234, 255, 0.7);
+}
+
+.navleiste:not(.kompakt) .nav-links a:hover,
+.navleiste:not(.kompakt) .nav-links a:focus-visible {
+    color: #fff;
+    background: rgba(255, 255, 255, 0.05);
+}
+
+.navleiste:not(.kompakt) .nav-links a[aria-current] {
+    color: #fff;
+    font-weight: 400;
+    background: none;
+}
+
+/* statt Unterstrich: Lichtpunkt (siehe unten) */
+.navleiste:not(.kompakt) .nav-links a::after {
+    display: none;
+}
+
+/* feine Trennstriche zwischen den Begriffen (oben: senkrecht) */
+.navleiste:not(.kompakt) .nav-links li + li::before {
+    content: "";
+    position: absolute;
+    left: 0;
+    top: 50%;
+    width: 1px;
+    height: 16px;
+    background: rgba(255, 255, 255, 0.1);
+    transform: translateY(-50%);
+}
+
+/* Lichtpunkt am aktiven Begriff (oben: unter dem Wort) */
+.navleiste:not(.kompakt) .nav-links li:has(> a[aria-current])::after {
+    content: "";
+    position: absolute;
+    left: 50%;
+    bottom: 1px;
+    width: 4px;
+    height: 4px;
+    border-radius: 50%;
+    background: var(--akzent);
+    box-shadow: 0 0 8px var(--akzent);
+    transform: translateX(-50%);
+}
+
+/* Icons kleiner und zurückhaltender als die Begriffe, mit Trennlinie */
+.navleiste:not(.kompakt) .nav-aktionen {
+    padding-left: 8px;
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+}
+
+.navleiste:not(.kompakt) .nav-icon {
+    width: 36px;
+    height: 36px;
+    color: rgba(230, 234, 255, 0.6);
+}
+
+.navleiste:not(.kompakt) .nav-icon:hover,
+.navleiste:not(.kompakt) .nav-icon[aria-expanded="true"] {
+    color: #fff;
+}
+
+.navleiste:not(.kompakt) .nav-icon svg {
+    width: 15px;
+    height: 15px;
+}
+
+/* sanfte Lichtkante bei Hover */
+.navleiste:not(.kompakt)::before {
+    transition: border-color 0.4s, box-shadow 0.4s;
+}
+
+.navleiste:not(.kompakt):hover::before {
+    border-color: rgba(255, 255, 255, 0.2);
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.35), inset 0 1px 0 rgba(255, 255, 255, 0.12),
+                inset 1px 0 0 rgba(255, 255, 255, 0.06);
+}
+
 /* --- Aufklapp-Elemente (Kontaktkarte, kompaktes Menü) --- */
 .kontaktkarte,
 .navleiste.kompakt .nav-links {
@@ -261,66 +356,91 @@
     text-decoration-color: var(--akzent);
 }
 
-/* --- Angedockt: senkrechtes Band am rechten Rand --- */
-.navleiste.angedockt {
+/* --- Angedockt: schmale, hochformatige Glasleiste am rechten Rand ---
+   Icons oben, darunter die Begriffe um 90° gedreht und gleichmäßig verteilt.
+   Nur ohne .kompakt (nav.js: breiter als 820 px und mindestens 700 px hoch). */
+.navleiste.angedockt:not(.kompakt) {
     top: 50%;
     left: auto;
-    right: 24px;
+    right: 20px;
     transform: translateY(-50%);
-    width: 220px;
-    grid-template-columns: 1fr;
-    padding: 10px;
-    font-size: 14px;
-    border-radius: 22px;
-}
-
-.navleiste.angedockt .nav-links {
-    grid-column: auto;
+    width: 64px;
+    height: min(78vh, 760px);
+    display: flex;
     flex-direction: column;
-    gap: 2px;
+    align-items: center;
+    padding: 14px 0;
+    font-size: clamp(11px, 1.5vh, 13px);
+    border-radius: 999px;
 }
 
-.navleiste.angedockt .nav-links a {
-    padding: 0.75em 1em 0.75em 1.4em;
-    border-radius: 12px;
+/* Icons oben, Trennlinie darunter */
+.navleiste.angedockt:not(.kompakt) .nav-aktionen {
+    order: -1;
+    flex-direction: column;
+    align-items: center;
+    gap: 4px;
+    padding: 0 0 12px;
+    margin-bottom: 4px;
+    border-left: none;
+    border-bottom: 1px solid rgba(255, 255, 255, 0.08);
 }
 
-/* Leuchtlinie wird zur senkrechten Markierung links */
-.navleiste.angedockt .nav-links a::after {
-    left: 0.6em;
+/* Begriffe: über die restliche Höhe verteilt */
+.navleiste.angedockt:not(.kompakt) .nav-links {
+    flex: 1;
+    flex-direction: column;
+    gap: 0;
+    width: 100%;
+}
+
+.navleiste.angedockt:not(.kompakt) .nav-links li {
+    position: relative;
+    flex: 1 1 auto; /* Textlänge + gleichmäßig verteilter Zusatzplatz */
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Trennstriche hier waagerecht */
+.navleiste.angedockt:not(.kompakt) .nav-links li + li::before {
+    top: 0;
+    left: 50%;
+    width: 16px;
+    height: 1px;
+    transform: translateX(-50%);
+}
+
+/* Lichtpunkt hier links neben dem Wort */
+.navleiste.angedockt:not(.kompakt) .nav-links li:has(> a[aria-current])::after {
+    left: 8px;
     top: 50%;
     bottom: auto;
-    width: 2px;
-    height: 0;
     transform: translateY(-50%);
 }
 
-.navleiste.angedockt .nav-links a:hover::after,
-.navleiste.angedockt .nav-links a:focus-visible::after,
-.navleiste.angedockt .nav-links a[aria-current]::after {
-    width: 2px;
-    height: 1.2em;
+/* um 90° gedreht, von unten nach oben zu lesen */
+.navleiste.angedockt:not(.kompakt) .nav-links a {
+    writing-mode: vertical-rl;
+    transform: rotate(180deg);
+    padding: 10px 8px;
+    border-radius: 10px;
 }
 
-.navleiste.angedockt .nav-aktionen {
-    grid-column: auto;
-    justify-self: stretch;
-    justify-content: center;
-    margin-top: 8px;
-    padding-top: 8px;
-    border-top: 1px solid var(--rand);
+.navleiste.angedockt:not(.kompakt) .nav-links a:active {
+    transform: rotate(180deg) scale(0.97);
 }
 
-/* Kontaktkarte öffnet nach links */
-.navleiste.angedockt .kontaktkarte {
-    top: auto;
-    bottom: 0;
+/* Kontaktkarte öffnet nach links, oben bündig mit den Icons */
+.navleiste.angedockt:not(.kompakt) .kontaktkarte {
+    top: 0;
+    bottom: auto;
     right: calc(100% + 12px);
     transform: translateX(8px) scale(0.98);
-    transform-origin: bottom right;
+    transform-origin: top right;
 }
 
-.navleiste.angedockt .kontaktkarte.offen {
+.navleiste.angedockt:not(.kompakt) .kontaktkarte.offen {
     transform: none;
 }
 
@@ -396,19 +516,23 @@
     height: 1.2em;
 }
 
-/* --- Kompakt + angedockt: schwebende Kapsel unten rechts --- */
+/* --- Kompakt + angedockt: flache Kapsel unten rechts ---
+   Waagerecht (Menü | LinkedIn | Kontakt), damit sie beim Lesen nur
+   einen schmalen Streifen am unteren Rand belegt. */
 .navleiste.kompakt.angedockt {
     top: auto;
-    bottom: 16px;
+    bottom: max(16px, env(safe-area-inset-bottom));
+    left: auto;
     right: 12px;
     transform: none;
     width: auto;
     display: flex;
-    flex-direction: column;
-    gap: 4px;
+    flex-direction: row;
+    align-items: center;
+    gap: 2px;
     padding: 5px;
     font-size: 15px;
-    border-radius: 28px;
+    border-radius: 999px;
 }
 
 .navleiste.kompakt.angedockt .nav-menue-knopf {
@@ -428,20 +552,20 @@
 }
 
 .navleiste.kompakt.angedockt .nav-aktionen {
-    flex-direction: column;
+    flex-direction: row;
     margin: 0;
-    padding: 4px 0 0;
-    border-top: 1px solid var(--rand);
+    padding: 0 0 0 2px;
+    border-left: 1px solid var(--rand);
 }
 
-/* Menü und Kontaktkarte öffnen nach links, unten bündig */
+/* Menü und Kontaktkarte öffnen nach oben, rechts bündig */
 .navleiste.kompakt.angedockt .nav-links,
 .navleiste.kompakt.angedockt .kontaktkarte {
     top: auto;
-    bottom: 0;
+    bottom: calc(100% + 10px);
     left: auto;
-    right: calc(100% + 10px);
-    transform: translateX(8px);
+    right: 0;
+    transform: translateY(8px);
     transform-origin: bottom right;
 }
 
@@ -450,8 +574,32 @@
     transform: none;
 }
 
-.navleiste.kompakt.angedockt .kontaktkarte {
-    width: min(300px, calc(100vw - 92px));
+/* Touch-Geräte: Begriffe der breiten Leiste mindestens 44 px hoch */
+@media (pointer: coarse) {
+    .navleiste:not(.kompakt):not(.angedockt) .nav-links a {
+        padding-block: 1.1em;
+    }
+
+    .navleiste:not(.kompakt) .nav-icon {
+        width: 44px;
+        height: 44px;
+    }
+}
+
+/* --- Während der Verwandlung (nav.js setzt Lage und Größe inline) ---
+   Die Glasfläche wandert und verformt sich mit dem Scrollen; der Inhalt
+   blendet über --inhalt aus (alter Zustand) bzw. ein (neuer Zustand). */
+.navleiste.verwandelt {
+    overflow: hidden;
+}
+
+/* Einblend-Animation nur beim Seitenaufruf, danach nie wieder starten */
+.navleiste.eingeblendet {
+    animation: none;
+}
+
+.navleiste.verwandelt > * {
+    opacity: var(--inhalt, 1);
 }
 
 @media (orientation: portrait) {

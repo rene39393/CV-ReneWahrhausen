@@ -26,6 +26,8 @@
     ];
 
     requestAnimationFrame(() => requestAnimationFrame(() => leiste.classList.add("bereit")));
+    // Einblend-Animation beim Laden nicht bei späteren Klassenwechseln wiederholen
+    leiste.addEventListener("animationend", () => leiste.classList.add("eingeblendet"), { once: true });
 
     const istOffen = a => a.knopf.getAttribute("aria-expanded") === "true";
 
@@ -78,44 +80,113 @@
     const start = document.querySelector(".start");
     const ruhig = matchMedia("(prefers-reduced-motion: reduce)");
     const KOMPAKT_BIS = 820;           // darunter immer Menü-Knopf
-    const BAND_AB = 1100;              // angedockt: ab hier senkrechtes Band mit Links
+    const LEISTE_MIN_HOEHE = 700;      // angedockt: darunter passen die gedrehten Begriffe nicht
     let angedockt = false;
 
     function layoutSetzen() {
         leiste.classList.toggle("angedockt", angedockt);
         leiste.classList.toggle("kompakt",
-            innerWidth <= KOMPAKT_BIS || (angedockt && innerWidth < BAND_AB));
+            innerWidth <= KOMPAKT_BIS || (angedockt && innerHeight < LEISTE_MIN_HOEHE));
     }
 
-    // Wechsel: oben weich ausblenden, Layout umstellen, an neuer Stelle hereingleiten
-    function andocken(neu) {
-        if (neu === angedockt) return;
-        angedockt = neu;
-        aufklapper.filter(istOffen).forEach(a => umschalten(a, false));
-        leiste.getAnimations().forEach(a => a.cancel());
+    // --- Scrollgekoppelte Verwandlung: Leiste oben -> Seitenleiste rechts ---
+    // fortschritt 0 = oben, 1 = angedockt; ergibt sich direkt aus der Scrollposition,
+    // folgt also dem Scrolltempo und läuft beim Zurückscrollen rückwärts.
+    const WEG = 0.6;                   // Verwandlung über 60 % der Fensterhöhe Scrollweg
+    let masse = null;                  // gemessene Start- und Endlage (Cache)
+    let verwandelt = false;
 
-        if (ruhig.matches || !leiste.animate) {
+    function fortschrittBerechnen() {
+        if (!start) return 1;
+        const unten = start.getBoundingClientRect().bottom;
+        const p = (innerHeight - unten) / (innerHeight * WEG);
+        // an den Enden einrasten (Rundung beim Scrollen soll keinen Zwischenzustand lassen)
+        return p < 0.02 ? 0 : p > 0.98 ? 1 : p;
+    }
+
+    function inlineLoeschen() {
+        for (const k of ["left", "top", "right", "bottom", "width", "height", "transform", "borderRadius", "--inhalt"]) {
+            leiste.style.removeProperty(k.startsWith("--") ? k : k.replace(/[A-Z]/g, m => "-" + m.toLowerCase()));
+        }
+    }
+
+    // Lage und Rundung beider Endzustände messen (ohne Inline-Werte)
+    function messen() {
+        const war = angedockt;
+        leiste.getAnimations().forEach(x => x.finish());
+        leiste.classList.remove("verwandelt");
+        inlineLoeschen();
+        const lage = dock => {
+            angedockt = dock;
             layoutSetzen();
+            const r = leiste.getBoundingClientRect();
+            return { x: r.left, y: r.top, b: r.width, h: r.height,
+                     rund: parseFloat(getComputedStyle(leiste).borderTopLeftRadius) || 0 };
+        };
+        masse = { oben: lage(false), unten: lage(true) };
+        angedockt = war;
+        layoutSetzen();
+    }
+
+    const mischen = (a, b, t) => a + (b - a) * t;
+    const weich = t => t * t * (3 - 2 * t);    // sanft an- und auslaufend
+
+    function anwenden(p) {
+        // Bewegung reduziert: ohne Verwandlung umschalten (mit etwas Abstand gegen Flackern)
+        if (ruhig.matches) {
+            const neu = p >= 1 ? true : p < 0.8 ? false : angedockt;
+            if (neu !== angedockt) {
+                aufklapper.filter(istOffen).forEach(x => umschalten(x, false));
+                angedockt = neu;
+                layoutSetzen();
+            }
             return;
         }
-        const weg = neu ? "0 -16px" : "16px 0";
-        const her = neu ? "24px 0" : "0 -16px";
-        const raus = leiste.animate(
-            [{ opacity: 1, translate: "0 0" }, { opacity: 0, translate: weg }],
-            { duration: 200, easing: "ease-in", fill: "forwards" });
-        let erledigt = false;
-        const umstellen = () => {
-            if (erledigt || angedockt !== neu) return;
-            erledigt = true;
+
+        if (p <= 0 || p >= 1) {
+            if (verwandelt || angedockt !== (p >= 1)) {
+                verwandelt = false;
+                leiste.classList.remove("verwandelt");
+                inlineLoeschen();
+                angedockt = p >= 1;
+                layoutSetzen();
+            }
+            return;
+        }
+
+        if (!verwandelt) {
+            aufklapper.filter(istOffen).forEach(x => umschalten(x, false));
+            leiste.classList.add("eingeblendet");
+            if (!masse) messen();
+            verwandelt = true;
+            leiste.classList.add("verwandelt");
+        }
+
+        // Klassen wechseln in der Mitte, wenn der Inhalt ausgeblendet ist
+        const dock = p >= 0.5;
+        if (dock !== angedockt) {
+            angedockt = dock;
             layoutSetzen();
-            leiste.animate(
-                [{ opacity: 0, translate: her }, { opacity: 1, translate: "0 0" }],
-                { duration: 420, easing: "cubic-bezier(.2, .8, .2, 1)" });
-            raus.cancel();
-        };
-        raus.onfinish = umstellen;
-        // Absicherung, falls der Browser Animationen pausiert (Hintergrund-Tab)
-        setTimeout(umstellen, 260);
+        }
+
+        // Mittelpunkt gleitet sanft; Breite schrumpft früh, Höhe wächst spät:
+        // so wandert eine kleine Kapsel nach rechts und streckt sich erst am Ziel
+        const t = weich(p), { oben: o, unten: u } = masse;
+        const b = mischen(o.b, u.b, 1 - (1 - p) ** 3);
+        const h = mischen(o.h, u.h, p ** 3);
+        const mx = mischen(o.x + o.b / 2, u.x + u.b / 2, t);
+        const my = mischen(o.y + o.h / 2, u.y + u.h / 2, t);
+        const st = leiste.style;
+        st.left = mx - b / 2 + "px";
+        st.top = my - h / 2 + "px";
+        st.width = b + "px";
+        st.height = h + "px";
+        st.right = "auto";
+        st.bottom = "auto";
+        st.transform = "none";
+        st.borderRadius = Math.min(mischen(o.rund, u.rund, t), b / 2, h / 2) + "px";
+        // alter Inhalt bis 30 % ausblenden, neuer ab 70 % einblenden
+        st.setProperty("--inhalt", p < 0.5 ? Math.max(0, 1 - p / 0.3) : Math.max(0, (p - 0.7) / 0.3));
     }
 
     // Aktuellen Abschnitt im Menü markieren
@@ -141,20 +212,22 @@
         geplant = true;
         requestAnimationFrame(() => {
             geplant = false;
-            // Startseite verlassen: ihr unteres Ende liegt über 40 % der Fensterhöhe
-            // (zurück erst ab 50 %, damit es an der Grenze nicht flackert)
-            const unten = start ? start.getBoundingClientRect().bottom : 0;
-            if (!angedockt && unten < innerHeight * 0.4) andocken(true);
-            else if (angedockt && unten > innerHeight * 0.5) andocken(false);
+            anwenden(fortschrittBerechnen());
             abschnittMarkieren();
         });
     }
 
     addEventListener("scroll", beimScrollen, { passive: true });
-    addEventListener("resize", () => { layoutSetzen(); beimScrollen(); });
+    addEventListener("resize", () => {
+        masse = null;                  // Lagen neu messen
+        if (verwandelt) { verwandelt = false; leiste.classList.remove("verwandelt"); inlineLoeschen(); }
+        layoutSetzen();
+        beimScrollen();
+    });
 
-    // Startzustand ohne Animation (z. B. beim Neuladen mitten auf der Seite)
-    angedockt = start ? start.getBoundingClientRect().bottom < innerHeight * 0.4 : false;
+    // Startzustand (z. B. beim Neuladen mitten auf der Seite)
+    angedockt = fortschrittBerechnen() >= 1;
     layoutSetzen();
+    anwenden(fortschrittBerechnen());
     abschnittMarkieren();
 })();

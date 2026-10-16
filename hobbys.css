@@ -21,6 +21,11 @@
     color: #d6dbf5;
 }
 
+/* kleiner Abstand zwischen zwei Absätzen */
+.hobby p + p {
+    margin-top: 10px;
+}
+
 /* Glas-Textkarte, wie Timeline und Kompetenzen */
 .hobby-text,
 .hobby-karte {
