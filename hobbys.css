@@ -146,12 +146,6 @@
     overflow: hidden;
 }
 
-.hobby-icons {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-
 .hobby-icon {
     display: inline-grid;
     place-items: center;
@@ -162,13 +156,6 @@
     border-radius: 16px;
 }
 
-.hobby-icon.klein {
-    width: 40px;
-    height: 40px;
-    border-radius: 12px;
-    opacity: 0.8;
-}
-
 .hobby-icon svg {
     width: 26px;
     height: 26px;
@@ -177,11 +164,6 @@
     stroke-width: 1.7;
     stroke-linecap: round;
     stroke-linejoin: round;
-}
-
-.hobby-icon.klein svg {
-    width: 18px;
-    height: 18px;
 }
 
 /* Finanzen: Akzent Limette */
@@ -204,13 +186,6 @@
     border-color: rgba(110, 231, 249, 0.35);
     background: rgba(110, 231, 249, 0.08);
     box-shadow: 0 0 24px rgba(110, 231, 249, 0.2);
-}
-
-.hobby-ki .hobby-icon.klein {
-    color: #a5b4fc;
-    border-color: rgba(139, 124, 255, 0.35);
-    background: rgba(139, 124, 255, 0.08);
-    box-shadow: none;
 }
 
 .hobby-ki {
